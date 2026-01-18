@@ -106,7 +106,7 @@ export function Home(){
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {values.map((value) => {
-                        const Icon = iconMap[value.icon];
+                        const Icon = iconMap[value.icon as keyof typeof iconMap];
                         return (
                         <div className="flex flex-col items-center text-center p-6">
                             <Icon className="w-12 h-12 text-(--base-color) mb-4" />
