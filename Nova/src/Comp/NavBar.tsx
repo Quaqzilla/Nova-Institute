@@ -3,13 +3,34 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Menu, X, ChevronRight } from "lucide-react";
 import lg from "./../assets/Images/Logo.png";
+import { auth } from "../../firebase";
+import { signOut } from "firebase/auth";
 
 export function NavBar(){
 
     const [isOpen, setIsOpen] = useState(false);
+    const [isLogged, setIsLogged] = useState(false);
     const toggleMenu = () => setIsOpen(!isOpen);
     const [isScrolled, setIsScrolled] = useState(false);
     const navigate = useNavigate();
+
+    //Check if a user has logged in
+    useEffect(() => {
+        const unsubscribe = auth.onAuthStateChanged((user) => {
+            setIsLogged(!!user);
+        });
+        return unsubscribe;
+    }, []);
+
+    const LogOut = async() => {
+        try{
+            await signOut(auth)
+            setIsLogged(false)
+            navigate('/')
+        }catch (Error){
+            console.error(Error)
+        }
+    }
 
     const Home = async()=> {
         try{
@@ -36,13 +57,22 @@ export function NavBar(){
         }
     }
 
+    const Apply = async () => {
+        try{
+            await navigate("/Application")
+        }catch{
+            console.error("Could not move to Sign Up Screen")
+        }
+    }
+
+
     const menuItems = [
             { label: 'Home', href: '/'},
-            { label: 'About', href: '/About'},
-            { label: 'Programs', href: '/Programs'},
-            { label: 'Gallery', href: '/Gallery' },
-            { label: 'Newsletter', href: '/NewsLetter'},
-            { label: 'Contact', href: '/Contact'},
+            { label: 'About', href: '/Nova-Institute/About'},
+            { label: 'Programs', href: '/Nova-Institute/Programs'},
+            { label: 'Gallery', href: '/Nova-Institute/Gallery' },
+            { label: 'Newsletter', href: '/Nova-Institute/NewsLetter'},
+            { label: 'Contact', href: '/Nova-Institute/Contact'},
     ];
 
     useEffect(() => {
@@ -67,8 +97,8 @@ export function NavBar(){
             
                 <ul className="hidden md:flex gap-4">
                     <Link to="/" className="text-black hover:text-(--main-color) hover:font-lg duration-200">Home</Link>
-                    <Link to="/" className="text-black hover:text-(--main-color) hover:font-lg duration-200">About</Link>
-                    <Link to="/" className="text-black hover:text-(--main-color) hover:font-lg duration-200">Programs</Link>
+                    <Link to="/About" className="text-black hover:text-(--main-color) hover:font-lg duration-200">About</Link>
+                    <Link to="/Programs" className="text-black hover:text-(--main-color) hover:font-lg duration-200">Programs</Link>
                     <Link to="/" className="text-black hover:text-(--main-color) hover:font-lg duration-200">Gallery</Link>
                     <Link to="/" className="text-black hover:text-(--main-color) hover:font-lg duration-200">Newsletter</Link>
                     <Link to="/" className="text-black hover:text-(--main-color) hover:font-lg duration-200">Contact</Link>
@@ -128,7 +158,13 @@ export function NavBar(){
                                 </a>
                             ))}
                         </nav>
-
+                        
+                        {isLogged ? 
+                        <button className={`w-full mb-4 py-4 px-6 bg-(--text-color) text-black font-bold rounded-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 ${
+                                isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+                            }`}
+                            style={{ transitionDelay: isOpen ? '200ms' : '0ms' }}
+                            onClick={LogOut}>Log Out</button> : 
                         <button
                             className={`w-full mb-4 py-4 px-6 bg-(--text-color) text-black font-bold rounded-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 ${
                                 isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
@@ -138,23 +174,29 @@ export function NavBar(){
                         >
                             Login / Sign Up
                         </button>
-
+                        }
                         <button
                             className={`w-full py-4 px-6 bg-(--text-color) text-black font-bold rounded-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 ${
                                 isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                             }`}
                             style={{ transitionDelay: isOpen ? '200ms' : '0ms' }}
+                            onClick={Apply}
                         >
                             Enroll Now
                         </button>
                     </div>
                 </div>
-
+                
+                {isLogged ?  
+                <div className="hidden md:flex md:gap-2 md:items-center">
+                    <button className="cursor-pointer hidden px-10 py-3 bg-(--base-color) text-white font-bold rounded-xl backdrop-blur-sm border-white/10 hover:border-white/20 transition-all duration-300 p-3 md:flex" onClick={LogOut}>Log Out</button>
+                </div>
+                :
                  <div className="hidden md:flex md:gap-2 md:items-center">
                     <button className="cursor-pointer hidden px-6 py-3 bg-(--base-color) text-white font-bold rounded-xl backdrop-blur-sm border-white/10 hover:border-white/20 transition-all duration-300 p-3 md:flex" onClick={Login}>Login</button>
                     <button className="cursor-pointer hidden px-5 py-3 bg-(--base-color) text-white font-bold rounded-xl backdrop-blur-sm border-white/10 hover:border-white/20 transition-all duration-300 p-3 md:flex"onClick={Signup}>Sign Up</button>
                 </div>
-            
+                }
         </div>
     )
 }

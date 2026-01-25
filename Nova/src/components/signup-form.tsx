@@ -10,9 +10,10 @@ import {
 import { Input } from "@/components/ui/input"
 import { Link } from "react-router-dom"
 import { useState } from "react"
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth"
+import { createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from "firebase/auth"
 import { auth } from "../../firebase"
 import img from "../assets/Images/Sign.webp"
+import { useNavigate } from "react-router-dom"
 
 export function SignupForm({
   className,
@@ -26,6 +27,7 @@ export function SignupForm({
   const [confirmPassword, setConfirmPassword] = useState("")
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -42,6 +44,8 @@ export function SignupForm({
         displayName: `${name} ${surname}`
       })
       // Signup successful, you can redirect or update state here
+      await sendEmailVerification(userCredential.user)
+      navigate('/Login')
     } catch (err: any) {
       setError(err.message)
     } finally {

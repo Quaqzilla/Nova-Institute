@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input"
 import { Link } from "react-router-dom"
 import { useState } from "react"
 import { signInWithEmailAndPassword } from "firebase/auth"
+import { useNavigate } from "react-router-dom"
 import { auth } from "../../firebase"
 import img from "../assets/Images/Login.webp"
  
@@ -22,6 +23,7 @@ export function LoginForm({
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -29,7 +31,10 @@ export function LoginForm({
     setLoading(true)
     try {
       await signInWithEmailAndPassword(auth, email, password)
-      // Login successful, you can redirect or update state here
+      //Change navigate to the student portal where they can see their status'
+      navigate('/')
+      
+      console.log(auth.currentUser)
     } catch (err: any) {
       setError(err.message)
     } finally {

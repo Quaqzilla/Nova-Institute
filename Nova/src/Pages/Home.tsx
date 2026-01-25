@@ -5,8 +5,11 @@ import { Card, CardHeader, CardDescription, CardFooter } from "@/components/ui/c
 import { Button } from "@/components/ui/button";
 import { Footer } from "@/Comp/Footer";
 import Courses from "@/assets/Courses";
+import { useNavigate } from "react-router-dom";
 
 export function Home(){
+    const navigate = useNavigate()
+
     const iconMap = {
     Sparkles,
     Shield,
@@ -20,6 +23,22 @@ export function Home(){
         {icon: "Star", title: "Excellence", reason: "Delivering training that meets real-world industry standards"},
         {icon: "Users", title: "Inclusivity", reason: "Making education accessible to all, regardless of background"}
     ];
+
+    const Apply = async () => {
+        try{
+            await navigate("/Application")
+        }catch{
+            console.error("Could not move to Sign Up Screen")
+        }
+    }
+
+    const Programs = async () => {
+        try{
+            await navigate("/Programs")
+        }catch{
+            console.error("Could not move to Sign Up Screen")
+        }
+    }
 
     return(
         <div className="w-full">
@@ -36,11 +55,11 @@ export function Home(){
                             Experience-Building Opportunities, Job Placement, Assistance, Flexible Learning, Affordable & Inclusive Experiences, Experienced Facilitators & Meals During Training
                         </p>
                         <div className="flex flex-wrap gap-4">
-                            <button className="px-8 py-4 bg-(--base-color) text-white rounded-lg hover:bg-blue-700 transition-all shadow-lg hover:shadow-xl flex items-center gap-2 font-semibold cursor-pointer">
+                            <button className="px-8 py-4 bg-(--base-color) text-white rounded-lg hover:bg-blue-700 transition-all shadow-lg hover:shadow-xl flex items-center gap-2 font-semibold cursor-pointer" onClick={Apply}>
                                 Apply Now
                                 <ChevronRight className="w-5 h-5" />
                             </button>
-                            <button className="px-8 py-4 border-2 border-(--base-color) text-(--base-color) rounded-lg hover:bg-blue-50 transition-all font-semibold cursor-pointer">
+                            <button className="px-8 py-4 border-2 border-(--base-color) text-(--base-color) rounded-lg hover:bg-blue-50 transition-all font-semibold cursor-pointer" onClick={Programs}>
                                 Explore Programs
                             </button>
                         </div> 
@@ -60,7 +79,7 @@ export function Home(){
             {/*Faculties Section*/}
             <section className="px-6 py-16 overflow-hidden bg-(--base-color) flex flex-col gap-5 items-center">
                 <div>
-                    <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-2 text-slate-200 leading-tight">Our Programs</h1>
+                    <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-2 text-slate-200 leading-tight text-center">Our Programs</h1>
                     <p className="text-center text-lg md:text-xl text-(--text-color) mb-8 leading-relaxed">We offer a wide range of in demand fields to study.</p>
                 </div>
 
