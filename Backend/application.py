@@ -8,7 +8,7 @@ connection = mysql.connector.connect(
     host = "localhost"
 )
 
-class Application_Form():
+class Application_Form:
     def __init__(self, name, surname, course, enrollment_type, course_type):
         self.name = name
         self.surname = surname
